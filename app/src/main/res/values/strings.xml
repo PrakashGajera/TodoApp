@@ -11,11 +11,7 @@
     <string name="add">ADD</string>
     <string name="warning">Warning</string>
     <string name="ok">OK</string>
+    <string name="am">AM</string>
     <string name="pm">PM</string>
     <string name="task_title">Task Title</string>
-
-    <string-array name="time">
-        <item>AM</item>
-        <item>PM</item>
-    </string-array>
 </resources>
