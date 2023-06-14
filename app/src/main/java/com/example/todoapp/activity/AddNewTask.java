@@ -6,16 +6,12 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.Spinner;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.todoapp.database.DataBaseHelper;
 import com.example.todoapp.R;
-import com.example.todoapp.databinding.ActivityMainBinding;
+import com.example.todoapp.database.DataBaseHelper;
 import com.example.todoapp.databinding.AddNewtaskBinding;
 import com.example.todoapp.model.ToDoModel;
 
@@ -29,6 +25,9 @@ public class AddNewTask extends AppCompatActivity {
     private String selectedItem;
     private String timeStamp;
     ToDoModel toDoModel;
+    Calendar calendar;
+    int currentHour;
+    int currentMinute;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,6 +38,7 @@ public class AddNewTask extends AppCompatActivity {
         getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
 
         myDb = new DataBaseHelper(this);
+        calendar = Calendar.getInstance();
 
         update = getIntent().getBooleanExtra("update", false);
         if (update) {
@@ -47,6 +47,15 @@ public class AddNewTask extends AppCompatActivity {
             binding.edittext.setText(toDoModel.getTask());
             binding.etMessage.setText(toDoModel.getMessage());
             binding.etIssueDate.setText(toDoModel.getTime());
+            selectedItem = toDoModel.getAmpm();
+            String[] time = toDoModel.getTime().split(":");
+            currentHour = Integer.parseInt(time[0]);
+            currentMinute = Integer.parseInt(time[1]);
+            if (toDoModel.getAmpm().equalsIgnoreCase("am"))
+                binding.spinnerTime.setSelection(0);
+            else
+                binding.spinnerTime.setSelection(1);
+            timeStamp = toDoModel.getTimestamp();
         }
 
         binding.imgBack.setOnClickListener(v -> onBackPressed());
@@ -56,6 +65,18 @@ public class AddNewTask extends AppCompatActivity {
         binding.spinnerTime.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 selectedItem = parent.getItemAtPosition(position).toString();
+                if (update) {
+                    if (position == 0) {
+                        calendar.set(Calendar.HOUR, currentHour);
+                        calendar.set(Calendar.MINUTE, currentMinute);
+                        calendar.set(Calendar.AM_PM, Calendar.AM);
+                    } else {
+                        calendar.set(Calendar.HOUR, currentHour);
+                        calendar.set(Calendar.MINUTE, currentMinute);
+                        calendar.set(Calendar.AM_PM, Calendar.PM);
+                    }
+                    timeStamp = String.valueOf(calendar.getTimeInMillis());
+                }
             }
 
             public void onNothingSelected(AdapterView<?> parent) {
@@ -89,17 +110,19 @@ public class AddNewTask extends AppCompatActivity {
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         int minute = calendar.get(Calendar.MINUTE);
         TimePickerDialog mTimePicker = new TimePickerDialog(this, (timePicker, selectedHour, selectedMinute) -> {
-            calendar.set(Calendar.HOUR_OF_DAY, selectedHour);
-            calendar.set(Calendar.MINUTE, selectedMinute);
+            currentHour = selectedHour;
+            currentMinute = selectedMinute;
+            calendar.set(Calendar.HOUR, currentHour);
+            calendar.set(Calendar.MINUTE, currentMinute);
             calendar.set(Calendar.SECOND, 0);
-            timeStamp = String.valueOf(calendar.getTimeInMillis());
-
             if (selectedHour < 12) {
                 binding.spinnerTime.setSelection(0);
+                calendar.set(Calendar.AM_PM, Calendar.AM);
             } else {
                 binding.spinnerTime.setSelection(1);
+                calendar.set(Calendar.AM_PM, Calendar.PM);
             }
-
+            timeStamp = String.valueOf(calendar.getTimeInMillis());
             button.setText(String.format(Locale.getDefault(), "%02d:%02d", (selectedHour == 12 || selectedHour == 0) ? 12 : selectedHour % 12, selectedMinute));
         }, hour, minute, false);
         mTimePicker.setTitle("Select Time");
