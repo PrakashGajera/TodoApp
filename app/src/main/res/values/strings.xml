@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">Todo App</string>
+    <string name="delete_message">Do you want to delete \"%s\", this action can\'t be undone</string>
+    <string name="update">Update</string>
+    <string name="pending">Pending</string>
+    <string name="to_do_tasks">To Do Tasks</string>
+    <string name="add_a_task">Add a Task</string>
+    <string name="enter_message">Enter Message</string>
+    <string name="time">Time</string>
+    <string name="cancel">CANCEL</string>
+    <string name="add">ADD</string>
+    <string name="warning">Warning</string>
+    <string name="ok">OK</string>
+    <string name="pm">PM</string>
+    <string name="task_title">Task Title</string>
+
+    <string-array name="time">
+        <item>AM</item>
+        <item>PM</item>
+    </string-array>
+</resources>
