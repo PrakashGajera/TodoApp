@@ -3,6 +3,7 @@ package com.example.todoapp.adapter;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Paint;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,8 +23,11 @@ import com.example.todoapp.activity.AddNewTask;
 import com.example.todoapp.activity.MainActivity;
 import com.example.todoapp.database.DataBaseHelper;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 public class ToDoAdapter extends RecyclerView.Adapter<ToDoAdapter.MyViewHolder> {
     private List<ToDoModel> mList;

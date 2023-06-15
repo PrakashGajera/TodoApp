@@ -87,13 +87,7 @@ public class AddNewTask extends AppCompatActivity {
     private void openDatePicker(final EditText button) {
         final Calendar calendar = Calendar.getInstance();
         if (update) {
-            SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
-            Date date = null;
-            try {
-                date = sdf.parse(toDoModel.getTime() + " " + toDoModel.getAmpm());
-            } catch (ParseException e) {
-            }
-            calendar.setTime(date);
+            calendar.setTimeInMillis(Long.parseLong(toDoModel.getTimestamp()));
         }
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
         int minute = calendar.get(Calendar.MINUTE);
@@ -102,12 +96,10 @@ public class AddNewTask extends AppCompatActivity {
             calendar.set(Calendar.HOUR_OF_DAY, selectedHour);
             calendar.set(Calendar.MINUTE, selectedMinute);
             calendar.set(Calendar.SECOND, 0);
-            if (selectedHour < 12) {
+            if (selectedHour <= 12) {
                 binding.txtAMPM.setText(getString(R.string.am));
-                calendar.set(Calendar.AM_PM,0);
             } else {
                 binding.txtAMPM.setText(getString(R.string.pm));
-                calendar.set(Calendar.AM_PM,1);
             }
             timeStamp = String.valueOf(calendar.getTimeInMillis());
             button.setText(String.format(Locale.getDefault(), "%02d:%02d", (selectedHour == 12 || selectedHour == 0) ? 12 : selectedHour % 12, selectedMinute));
